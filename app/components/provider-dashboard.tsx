@@ -258,7 +258,7 @@ export default function ProviderDashboard({ onNavigate }: ProviderDashboardProps
             <MessageCircle className="h-5 w-5" />
             <span className="text-xs">Messages</span>
           </Button>
-          <Button variant="ghost" size="sm" className="flex-col space-y-1">
+          <Button variant="ghost" size="sm" className="flex-col space-y-1" onClick={() => onNavigate("user-profile")}>
             <User className="h-5 w-5" />
             <span className="text-xs">Profile</span>
           </Button>

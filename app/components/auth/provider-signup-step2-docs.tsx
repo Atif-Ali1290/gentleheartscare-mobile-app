@@ -65,19 +65,20 @@ export default function ProviderSignupStep2Docs({ onNavigate }: ProviderSignupSt
   )
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-blue-50 to-white p-6">
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-red-50 to-white p-6">
       {/* Header with Back Button */}
       <div className="flex items-center mb-8">
-        <Button variant="ghost" size="icon" onClick={() => onNavigate("provider-signup-step1")}>
-          <ArrowLeft className="h-6 w-6 text-gray-700" />
+        <Button variant="ghost" size="icon" onClick={() => onNavigate("provider-signup-step1")}
+          className="text-red-600 hover:bg-red-100">
+          <ArrowLeft className="h-6 w-6" />
         </Button>
-        <h1 className="text-2xl font-bold text-gray-900 ml-4">Provider Sign Up (2/2)</h1>
+        <h1 className="text-2xl font-bold text-red-700 ml-4">Provider Sign Up (2/2)</h1>
       </div>
 
       <div className="flex-1 overflow-y-auto space-y-6 pb-8">
         <div className="text-center mb-6">
-          <UploadCloud className="h-16 w-16 text-blue-600 mx-auto mb-4" />
-          <p className="text-lg text-gray-700">Upload your credentials for verification.</p>
+          <UploadCloud className="h-16 w-16 text-red-600 mx-auto mb-4" />
+          <p className="text-lg text-red-700">Upload your credentials for verification.</p>
           <p className="text-sm text-gray-500">Accepted formats: PDF, JPG, PNG</p>
         </div>
 
@@ -99,7 +100,7 @@ export default function ProviderSignupStep2Docs({ onNavigate }: ProviderSignupSt
       </div>
 
       <div className="mt-auto py-4">
-        <Button className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-lg font-semibold" onClick={handleSubmit}>
+        <Button className="w-full h-12 bg-red-600 hover:bg-red-700 text-lg font-semibold text-white shadow" onClick={handleSubmit}>
           Submit for Verification
         </Button>
       </div>

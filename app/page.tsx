@@ -16,6 +16,8 @@ import ProviderDashboard from "./components/provider-dashboard"
 import EmergencySupport from "./components/emergency-support"
 import NotificationsPage from "./components/notifications-page"
 import MyAppointments from "./components/my-appointments" // Import the new component
+import UserProfile from "./components/user-profile"
+import AccountSettingsPage from "./components/account-settings-page"
 
 interface User {
   name: string
@@ -28,6 +30,8 @@ export default function GentleHeartsCareApp() {
   const [userRole, setUserRole] = useState<"consumer" | "provider" | null>(null)
   const [screenData, setScreenData] = useState<any>(null) // Store data to pass between screens
   const [user, setUser] = useState<User | null>(null) // Store user information
+  // Add a new state to track if account settings are completed
+  const [accountSettingsComplete, setAccountSettingsComplete] = useState(false)
 
   const navigateToScreen = (screen: string, data?: any) => {
     setCurrentScreen(screen)
@@ -36,6 +40,19 @@ export default function GentleHeartsCareApp() {
 
   const setUserData = (userData: User) => {
     setUser(userData)
+    // If user is a consumer and not yet completed account settings, go to account settings page
+    if (userData.role === "consumer" && !accountSettingsComplete) {
+      setCurrentScreen("account-settings")
+    } else {
+      setCurrentScreen(userData.role === "consumer" ? "consumer-home" : "provider-dashboard")
+    }
+  }
+
+  // Handler for AccountSettingsPage to save and update user info
+  const handleAccountSettingsSave = (settings: any) => {
+    setUser((prev) => prev ? { ...prev, ...settings } : settings)
+    setAccountSettingsComplete(true)
+    setCurrentScreen("consumer-home")
   }
 
   const renderScreen = () => {
@@ -78,6 +95,11 @@ export default function GentleHeartsCareApp() {
         return <NotificationsPage onNavigate={navigateToScreen} />
       case "my-appointments": // New case for My Appointments screen
         return <MyAppointments onNavigate={navigateToScreen} data={screenData} />
+      case "user-profile":
+        return <UserProfile user={user} onNavigate={navigateToScreen} />
+      case "account-settings":
+        // If screenData is present (from signup), use it as user prop
+        return <AccountSettingsPage onNavigate={navigateToScreen} onSave={handleAccountSettingsSave} user={screenData || user} />
       default:
         return <AuthScreen onNavigate={navigateToScreen} />
     }

@@ -8,11 +8,11 @@ interface WelcomeScreenProps {
 
 export default function WelcomeScreen({ onRoleSelect }: WelcomeScreenProps) {
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-blue-50 to-white">
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-red-50 to-white">
       {/* Header */}
       <div className="text-center pt-12 pb-8 px-6">
         <div className="flex items-center justify-center mb-4">
-          <div className="bg-blue-600 p-3 rounded-full">
+          <div className="bg-red-600 p-3 rounded-full">
             <Heart className="h-8 w-8 text-white" />
           </div>
         </div>
@@ -24,26 +24,26 @@ export default function WelcomeScreen({ onRoleSelect }: WelcomeScreenProps) {
       <div className="px-6 mb-8">
         <div className="grid grid-cols-2 gap-4">
           <div className="text-center">
-            <div className="bg-blue-100 p-3 rounded-full w-fit mx-auto mb-2">
-              <Shield className="h-6 w-6 text-blue-600" />
+            <div className="bg-red-100 p-3 rounded-full w-fit mx-auto mb-2">
+              <Shield className="h-6 w-6 text-red-600" />
             </div>
             <p className="text-sm text-gray-600">Secure & Safe</p>
           </div>
           <div className="text-center">
-            <div className="bg-blue-100 p-3 rounded-full w-fit mx-auto mb-2">
-              <Star className="h-6 w-6 text-blue-600" />
+            <div className="bg-red-100 p-3 rounded-full w-fit mx-auto mb-2">
+              <Star className="h-6 w-6 text-red-600" />
             </div>
             <p className="text-sm text-gray-600">Rated Providers</p>
           </div>
           <div className="text-center">
-            <div className="bg-blue-100 p-3 rounded-full w-fit mx-auto mb-2">
-              <Users className="h-6 w-6 text-blue-600" />
+            <div className="bg-red-100 p-3 rounded-full w-fit mx-auto mb-2">
+              <Users className="h-6 w-6 text-red-600" />
             </div>
             <p className="text-sm text-gray-600">24/7 Support</p>
           </div>
           <div className="text-center">
-            <div className="bg-blue-100 p-3 rounded-full w-fit mx-auto mb-2">
-              <Stethoscope className="h-6 w-6 text-blue-600" />
+            <div className="bg-red-100 p-3 rounded-full w-fit mx-auto mb-2">
+              <Stethoscope className="h-6 w-6 text-red-600" />
             </div>
             <p className="text-sm text-gray-600">Expert Care</p>
           </div>
@@ -56,12 +56,12 @@ export default function WelcomeScreen({ onRoleSelect }: WelcomeScreenProps) {
 
         <div className="space-y-4">
           <Card
-            className="border-2 border-transparent hover:border-blue-200 transition-colors cursor-pointer"
+            className="border-2 border-transparent hover:border-red-200 transition-colors cursor-pointer"
             onClick={() => onRoleSelect("consumer")}
           >
             <CardHeader className="pb-3">
               <div className="flex items-center space-x-3">
-                <div className="bg-blue-600 p-2 rounded-lg">
+                <div className="bg-red-600 p-2 rounded-lg">
                   <Heart className="h-6 w-6 text-white" />
                 </div>
                 <div>
@@ -80,7 +80,7 @@ export default function WelcomeScreen({ onRoleSelect }: WelcomeScreenProps) {
           </Card>
 
           <Card
-            className="border-2 border-transparent hover:border-blue-200 transition-colors cursor-pointer"
+            className="border-2 border-transparent hover:border-green-200 transition-colors cursor-pointer"
             onClick={() => onRoleSelect("provider")}
           >
             <CardHeader className="pb-3">

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo, useEffect } from "react"
+import { useState, useMemo } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import {
@@ -18,6 +18,7 @@ import {
   MessageCircle,
   Brain,
   Activity,
+  X,
 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -36,13 +37,7 @@ interface ConsumerHomeProps {
 export default function ConsumerHome({ onNavigate, user }: ConsumerHomeProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [showAllProviders, setShowAllProviders] = useState(false)
-
-  // Reset showAllProviders when search query changes
-  useEffect(() => {
-    if (searchQuery.trim()) {
-      setShowAllProviders(false)
-    }
-  }, [searchQuery])
+  const [showNotifications, setShowNotifications] = useState(false)
 
   const menuItems = [
     { name: "Book Caregiver", icon: Stethoscope, screen: "provider-profile" }, // Reusing provider-profile for booking flow
@@ -99,6 +94,53 @@ export default function ConsumerHome({ onNavigate, user }: ConsumerHomeProps) {
     },
   ]
 
+  const notifications = [
+    {
+      id: 1,
+      type: "appointment",
+      icon: Calendar,
+      title: "Appointment Reminder",
+      message: "Your appointment with Dr. Sarah Johnson is tomorrow at 10:00 AM.",
+      time: "2 hours ago",
+      color: "text-red-600",
+      navigateTo: "my-appointments",
+      data: { appointmentId: 1, providerName: "Dr. Sarah Johnson" }
+    },
+    {
+      id: 2,
+      type: "update",
+      icon: User,
+      title: "Caregiver Update",
+      message: "Nurse Maria Garcia has updated her availability for next week.",
+      time: "Yesterday",
+      color: "text-green-600",
+      navigateTo: "provider-profile",
+      data: { providerId: 2, providerName: "Nurse Maria Garcia" }
+    },
+    {
+      id: 3,
+      type: "emergency",
+      icon: PhoneCall,
+      title: "Emergency Log",
+      message: "SOS activated from your account. Location shared with emergency contacts.",
+      time: "3 days ago",
+      color: "text-red-600",
+      navigateTo: "emergency-support",
+      data: { emergencyId: 3, type: "sos" }
+    },
+    {
+      id: 4,
+      type: "appointment",
+      icon: Calendar,
+      title: "New Service Available",
+      message: "New physical therapy services are now available in your area.",
+      time: "1 week ago",
+      color: "text-red-600",
+      navigateTo: "provider-profile",
+      data: { serviceType: "physical-therapy" }
+    },
+  ]
+
   // Filter services and providers based on search query
   const filteredServices = useMemo(() => {
     if (!searchQuery.trim()) return services
@@ -120,18 +162,7 @@ export default function ConsumerHome({ onNavigate, user }: ConsumerHomeProps) {
   }, [searchQuery])
 
   // Providers to show (2 by default, all if showAllProviders is true)
-  const providersToShow = useMemo(() => {
-    if (searchQuery.trim()) {
-      // When searching, show all filtered providers
-      console.log('Searching - showing all filtered providers:', filteredProviders.length)
-      return filteredProviders
-    } else {
-      // When not searching, show 2 by default or all if showAllProviders is true
-      const providers = showAllProviders ? filteredProviders : filteredProviders.slice(0, 2)
-      console.log('Not searching - showAllProviders:', showAllProviders, 'showing providers:', providers.length)
-      return providers
-    }
-  }, [searchQuery, showAllProviders, filteredProviders])
+  const providersToShow = showAllProviders ? filteredProviders : filteredProviders.slice(0, 2)
 
   const handleServiceClick = (service: any) => {
     onNavigate("provider-profile", { serviceType: service.category })
@@ -141,28 +172,98 @@ export default function ConsumerHome({ onNavigate, user }: ConsumerHomeProps) {
     onNavigate("provider-profile", { providerName: provider.name })
   }
 
-  const handleViewAllClick = () => {
-    console.log('View All button clicked! Current state:', showAllProviders)
-    setShowAllProviders(!showAllProviders)
+  const handleNotificationClick = (notification: any) => {
+    setShowNotifications(false) // Close dropdown
+    if (notification.navigateTo) {
+      onNavigate(notification.navigateTo, notification.data)
+    }
   }
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white px-4 py-4 shadow-sm">
+      <div className="bg-white px-4 py-4 shadow-sm relative">
         <div className="flex items-center justify-between mb-4">
-          <div>
-            <h1 className="text-xl font-semibold text-gray-900">
-              Welcome, {user?.name || "User"}!
-            </h1>
-            <p className="text-gray-600 text-sm">Your health, our priority.</p>
+          <div className="flex items-center space-x-3">
+            {/* Logo */}
+            <div className="flex items-center space-x-2">
+              <div className="relative">
+                {/* Large Heart */}
+                <div className="w-10 h-10 relative">
+                  {/* Outer pink layer */}
+                  <div className="absolute inset-0 bg-pink-200 rounded-full transform rotate-45"></div>
+                  {/* Middle white layer */}
+                  <div className="absolute inset-1 bg-white rounded-full transform rotate-45"></div>
+                  {/* Inner red layer */}
+                  <div className="absolute inset-2 bg-red-500 rounded-full transform rotate-45"></div>
+                </div>
+                {/* Small scattered hearts */}
+                <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-pink-200 rounded-full transform rotate-45"></div>
+                <div className="absolute -top-1 -left-1 w-2 h-2 bg-red-300 rounded-full transform rotate-45"></div>
+              </div>
+              <div className="text-red-600 font-bold text-lg">GentleHeartsCare</div>
+            </div>
           </div>
-          <Button variant="ghost" size="icon" className="relative" onClick={() => onNavigate("notifications-page")}>
+          <div className="relative">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="relative" 
+              onClick={() => setShowNotifications(!showNotifications)}
+            >
             <Bell className="h-5 w-5" />
             <div className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-              2
+                {notifications.length}
             </div>
           </Button>
+
+            {/* Notifications Dropdown */}
+            {showNotifications && (
+              <div className="absolute right-0 top-12 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50 max-h-96 overflow-y-auto">
+                <div className="p-4 border-b border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold text-gray-900">Notifications</h3>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      onClick={() => setShowNotifications(false)}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+                <div className="p-2">
+                  {notifications.length === 0 ? (
+                    <div className="text-center text-gray-500 py-8">
+                      <Bell className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                      <p>No new notifications</p>
+                    </div>
+                  ) : (
+                    notifications.map((notification) => (
+                      <Card 
+                        key={notification.id} 
+                        className="mb-2 cursor-pointer hover:shadow-md transition-shadow border-l-4 border-l-red-500"
+                        onClick={() => handleNotificationClick(notification)}
+                      >
+                        <CardContent className="p-3">
+                          <div className="flex items-start space-x-3">
+                            <div className={`p-2 rounded-full bg-red-100 ${notification.color.replace("text-", "bg-").replace("-600", "-100")}`}>
+                              <notification.icon className={`h-4 w-4 ${notification.color}`} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-semibold text-gray-900 text-sm truncate">{notification.title}</h4>
+                              <p className="text-xs text-gray-700 mt-1 line-clamp-2">{notification.message}</p>
+                              <p className="text-xs text-gray-500 mt-2">{notification.time}</p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
         {/* Search Bar */}
         <div className="relative mb-4">
@@ -198,11 +299,11 @@ export default function ConsumerHome({ onNavigate, user }: ConsumerHomeProps) {
                     >
                       <CardContent className="p-4">
                         <div className="flex flex-col items-center text-center">
-                          <div className="bg-blue-100 p-3 rounded-full mb-3">
-                            <service.icon className="h-6 w-6 text-blue-600" />
+                          <div className="bg-red-100 p-3 rounded-full mb-3">
+                            <service.icon className="h-6 w-6 text-red-600" />
                           </div>
                           <h3 className="font-medium text-gray-900 mb-1">{service.name}</h3>
-                          <p className="text-sm text-blue-600 font-medium">{service.price}</p>
+                          <p className="text-sm text-red-600 font-medium">{service.price}</p>
                           <p className="text-xs text-gray-500">{service.time}</p>
                         </div>
                       </CardContent>
@@ -279,11 +380,11 @@ export default function ConsumerHome({ onNavigate, user }: ConsumerHomeProps) {
             >
               <CardContent className="p-4">
                 <div className="flex flex-col items-center text-center">
-                  <div className="bg-blue-100 p-3 rounded-full mb-3">
-                    <service.icon className="h-6 w-6 text-blue-600" />
+                      <div className="bg-red-100 p-3 rounded-full mb-3">
+                        <service.icon className="h-6 w-6 text-red-600" />
                   </div>
                   <h3 className="font-medium text-gray-900 mb-1">{service.name}</h3>
-                  <p className="text-sm text-blue-600 font-medium">{service.price}</p>
+                      <p className="text-sm text-red-600 font-medium">{service.price}</p>
                   <p className="text-xs text-gray-500">{service.time}</p>
                 </div>
               </CardContent>
@@ -294,20 +395,15 @@ export default function ConsumerHome({ onNavigate, user }: ConsumerHomeProps) {
         {/* Recent Providers / Available Providers */}
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-semibold text-gray-900">Available Providers</h2>
-          {(() => {
-            const shouldShowButton = !searchQuery.trim() && filteredProviders.length > 2
-            console.log('Button condition - searchQuery:', searchQuery, 'filteredProviders.length:', filteredProviders.length, 'shouldShowButton:', shouldShowButton)
-            return shouldShowButton ? (
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={handleViewAllClick}
-                className="text-blue-600 hover:text-blue-800"
-              >
-                {showAllProviders ? "Show Less" : "View All"}
-              </Button>
-            ) : null
-          })()}
+              {filteredProviders.length > 2 && (
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => setShowAllProviders(!showAllProviders)}
+                >
+                  {showAllProviders ? "Show Less" : "View All"}
+          </Button>
+              )}
         </div>
         <div className="space-y-3 mb-6">
               {providersToShow.map((provider) => (
@@ -355,7 +451,7 @@ export default function ConsumerHome({ onNavigate, user }: ConsumerHomeProps) {
             <Button
               key={item.name}
               variant="outline"
-              className="h-24 flex flex-col items-center justify-center space-y-2 border-blue-200 text-blue-700 hover:bg-blue-50 bg-transparent"
+              className="h-24 flex flex-col items-center justify-center space-y-2 border-red-200 text-red-700 hover:bg-red-50 bg-transparent"
               onClick={() => onNavigate(item.screen)}
             >
               <item.icon className="h-8 w-8" />
@@ -380,7 +476,7 @@ export default function ConsumerHome({ onNavigate, user }: ConsumerHomeProps) {
       {/* Bottom Navigation (Optional, if needed for more complex navigation) */}
       <div className="bg-white border-t border-gray-200 px-4 py-2 mt-4">
         <div className="flex justify-around">
-          <Button variant="ghost" size="sm" className="flex-col space-y-1 text-blue-600">
+          <Button variant="ghost" size="sm" className="flex-col space-y-1 text-red-600">
             <Heart className="h-5 w-5" />
             <span className="text-xs">Home</span>
           </Button>
@@ -392,7 +488,7 @@ export default function ConsumerHome({ onNavigate, user }: ConsumerHomeProps) {
             <MessageCircle className="h-5 w-5" />
             <span className="text-xs">Chat</span>
           </Button>
-          <Button variant="ghost" size="sm" className="flex-col space-y-1">
+          <Button variant="ghost" size="sm" className="flex-col space-y-1" onClick={() => onNavigate("user-profile")}> 
             <User className="h-5 w-5" />
             <span className="text-xs">Profile</span>
           </Button>

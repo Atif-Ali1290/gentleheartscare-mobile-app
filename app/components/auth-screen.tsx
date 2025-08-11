@@ -9,10 +9,10 @@ interface AuthScreenProps {
 
 export default function AuthScreen({ onNavigate }: AuthScreenProps) {
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-blue-50 to-white p-6">
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-red-50 to-white p-6">
       <div className="flex-1 flex flex-col items-center justify-center text-center">
         <div className="flex items-center justify-center mb-6">
-          <div className="bg-blue-600 p-4 rounded-full shadow-lg">
+          <div className="bg-red-600 p-4 rounded-full shadow-lg">
             <Heart className="h-16 w-16 text-white" />
           </div>
         </div>
@@ -21,14 +21,14 @@ export default function AuthScreen({ onNavigate }: AuthScreenProps) {
 
         <div className="w-full max-w-xs space-y-4">
           <Button
-            className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-lg font-semibold"
+            className="w-full h-12 bg-red-600 hover:bg-red-700 text-lg font-semibold"
             onClick={() => onNavigate("role-selection")}
           >
             Sign Up
           </Button>
           <Button
             variant="outline"
-            className="w-full h-12 border-blue-300 text-blue-600 hover:bg-blue-50 text-lg font-semibold bg-transparent"
+            className="w-full h-12 border-red-300 text-red-600 hover:bg-red-50 text-lg font-semibold bg-transparent"
             onClick={() => onNavigate("consumer-auth")} // Assuming login starts with consumer auth
           >
             Sign In
