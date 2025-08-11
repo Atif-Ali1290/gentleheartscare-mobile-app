@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 
 interface RoleSelectionScreenProps {
   onRoleSelect: (role: "consumer" | "provider") => void
-  onNavigate: (screen: string) => void
+  onNavigate: (screen: string, data?: any) => void
 }
 
 export default function RoleSelectionScreen({ onRoleSelect, onNavigate }: RoleSelectionScreenProps) {

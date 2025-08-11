@@ -17,52 +17,69 @@ import EmergencySupport from "./components/emergency-support"
 import NotificationsPage from "./components/notifications-page"
 import MyAppointments from "./components/my-appointments" // Import the new component
 
+interface User {
+  name: string
+  phoneNumber: string
+  role: "consumer" | "provider"
+}
+
 export default function GentleHeartsCareApp() {
   const [currentScreen, setCurrentScreen] = useState("auth-screen") // Initial screen is AuthScreen
   const [userRole, setUserRole] = useState<"consumer" | "provider" | null>(null)
+  const [screenData, setScreenData] = useState<any>(null) // Store data to pass between screens
+  const [user, setUser] = useState<User | null>(null) // Store user information
+
+  const navigateToScreen = (screen: string, data?: any) => {
+    setCurrentScreen(screen)
+    setScreenData(data || null)
+  }
+
+  const setUserData = (userData: User) => {
+    setUser(userData)
+  }
 
   const renderScreen = () => {
     switch (currentScreen) {
       case "auth-screen":
-        return <AuthScreen onNavigate={setCurrentScreen} />
+        return <AuthScreen onNavigate={navigateToScreen} />
       case "role-selection":
         return (
           <RoleSelectionScreen
             onRoleSelect={(role) => {
               setUserRole(role)
-              setCurrentScreen(role === "consumer" ? "consumer-auth" : "provider-signup-step1")
+              navigateToScreen(role === "consumer" ? "consumer-auth" : "provider-signup-step1")
             }}
-            onNavigate={setCurrentScreen}
+            onNavigate={navigateToScreen}
           />
         )
       case "consumer-auth":
-        return <ConsumerAuth onNavigate={setCurrentScreen} />
+        return <ConsumerAuth onNavigate={navigateToScreen} onUserLogin={setUserData} />
       case "provider-signup-step1":
-        return <ProviderSignupStep1 onNavigate={setCurrentScreen} />
+        return <ProviderSignupStep1 onNavigate={navigateToScreen} />
       case "provider-signup-step2-docs":
-        return <ProviderSignupStep2Docs onNavigate={setCurrentScreen} />
+        return <ProviderSignupStep2Docs onNavigate={navigateToScreen} />
       case "provider-verification-status":
-        return <ProviderVerificationStatus onNavigate={setCurrentScreen} />
+        return <ProviderVerificationStatus onNavigate={navigateToScreen} />
       case "consumer-home":
-        return <ConsumerHome onNavigate={setCurrentScreen} />
+        return <ConsumerHome onNavigate={navigateToScreen} user={user} />
       case "provider-profile":
-        return <ProviderProfile onNavigate={setCurrentScreen} />
+        return <ProviderProfile onNavigate={navigateToScreen} data={screenData} />
       case "map-tracking":
-        return <MapTracking onNavigate={setCurrentScreen} />
+        return <MapTracking onNavigate={navigateToScreen} />
       case "payment-negotiation":
-        return <PaymentNegotiation onNavigate={setCurrentScreen} />
+        return <PaymentNegotiation onNavigate={navigateToScreen} />
       case "chat":
-        return <ChatInterface onNavigate={setCurrentScreen} />
+        return <ChatInterface onNavigate={navigateToScreen} />
       case "provider-dashboard":
-        return <ProviderDashboard onNavigate={setCurrentScreen} />
+        return <ProviderDashboard onNavigate={navigateToScreen} />
       case "emergency-support":
-        return <EmergencySupport onNavigate={setCurrentScreen} />
+        return <EmergencySupport onNavigate={navigateToScreen} data={screenData} />
       case "notifications-page":
-        return <NotificationsPage onNavigate={setCurrentScreen} />
+        return <NotificationsPage onNavigate={navigateToScreen} />
       case "my-appointments": // New case for My Appointments screen
-        return <MyAppointments onNavigate={setCurrentScreen} />
+        return <MyAppointments onNavigate={navigateToScreen} data={screenData} />
       default:
-        return <AuthScreen onNavigate={setCurrentScreen} />
+        return <AuthScreen onNavigate={navigateToScreen} />
     }
   }
 

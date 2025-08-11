@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Heart } from "lucide-react"
 
 interface AuthScreenProps {
-  onNavigate: (screen: string) => void
+  onNavigate: (screen: string, data?: any) => void
 }
 
 export default function AuthScreen({ onNavigate }: AuthScreenProps) {

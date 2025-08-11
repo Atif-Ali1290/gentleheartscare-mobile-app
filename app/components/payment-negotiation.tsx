@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { ArrowLeft, DollarSign, Clock, MapPin, CreditCard, Wallet, Banknote, MessageCircle, Home } from "lucide-react"
 
 interface PaymentNegotiationProps {
-  onNavigate: (screen: string) => void
+  onNavigate: (screen: string, data?: any) => void
 }
 
 export default function PaymentNegotiation({ onNavigate }: PaymentNegotiationProps) {

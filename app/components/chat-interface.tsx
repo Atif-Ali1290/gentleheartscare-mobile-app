@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { ArrowLeft, Send, Phone, Video, MoreVertical, Shield, Home } from "lucide-react"
 
 interface ChatInterfaceProps {
-  onNavigate: (screen: string) => void
+  onNavigate: (screen: string, data?: any) => void
 }
 
 export default function ChatInterface({ onNavigate }: ChatInterfaceProps) {

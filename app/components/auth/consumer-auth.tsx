@@ -6,11 +6,18 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ArrowLeft, Phone, User, Loader2 } from "lucide-react"
 
-interface ConsumerAuthProps {
-  onNavigate: (screen: string) => void
+interface User {
+  name: string
+  phoneNumber: string
+  role: "consumer" | "provider"
 }
 
-export default function ConsumerAuth({ onNavigate }: ConsumerAuthProps) {
+interface ConsumerAuthProps {
+  onNavigate: (screen: string, data?: any) => void
+  onUserLogin: (userData: User) => void
+}
+
+export default function ConsumerAuth({ onNavigate, onUserLogin }: ConsumerAuthProps) {
   const [isLogin, setIsLogin] = useState(true)
   const [phoneNumber, setPhoneNumber] = useState("")
   const [name, setName] = useState("")
@@ -29,9 +36,20 @@ export default function ConsumerAuth({ onNavigate }: ConsumerAuthProps) {
     if (isLogin) {
       console.log(`Simulated login for phone: ${phoneNumber}`)
       alert("Simulated Login Successful!")
+      // For login, we'll use a default name since we don't have it stored
+      onUserLogin({
+        name: "User", // In a real app, this would come from the database
+        phoneNumber,
+        role: "consumer"
+      })
     } else {
       console.log(`Simulated registration for name: ${name}, phone: ${phoneNumber}`)
       alert("Simulated Registration Successful!")
+      onUserLogin({
+        name,
+        phoneNumber,
+        role: "consumer"
+      })
     }
     setIsLoading(false)
     onNavigate("consumer-home") // Directly navigate to consumer home

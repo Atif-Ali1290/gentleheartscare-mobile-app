@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label"
 import { ArrowLeft, UploadCloud, FileText, CheckCircle } from "lucide-react"
 
 interface ProviderSignupStep2DocsProps {
-  onNavigate: (screen: string) => void
+  onNavigate: (screen: string, data?: any) => void
 }
 
 export default function ProviderSignupStep2Docs({ onNavigate }: ProviderSignupStep2DocsProps) {

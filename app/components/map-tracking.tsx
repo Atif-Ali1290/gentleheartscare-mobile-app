@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, MapPin, Clock, Phone, MessageCircle, User, Star, Home } from "lucide-react"
 
 interface MapTrackingProps {
-  onNavigate: (screen: string) => void
+  onNavigate: (screen: string, data?: any) => void
 }
 
 export default function MapTracking({ onNavigate }: MapTrackingProps) {

@@ -20,7 +20,7 @@ import {
 } from "lucide-react"
 
 interface ProviderDashboardProps {
-  onNavigate: (screen: string) => void
+  onNavigate: (screen: string, data?: any) => void
 }
 
 export default function ProviderDashboard({ onNavigate }: ProviderDashboardProps) {

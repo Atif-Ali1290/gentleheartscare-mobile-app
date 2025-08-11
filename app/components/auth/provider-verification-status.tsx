@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Clock, Home, ArrowLeft } from "lucide-react"
 
 interface ProviderVerificationStatusProps {
-  onNavigate: (screen: string) => void
+  onNavigate: (screen: string, data?: any) => void
 }
 
 export default function ProviderVerificationStatus({ onNavigate }: ProviderVerificationStatusProps) {

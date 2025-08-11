@@ -1,17 +1,33 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Calendar, Clock, MapPin, Home } from "lucide-react"
 
 interface MyAppointmentsProps {
-  onNavigate: (screen: string) => void
+  onNavigate: (screen: string, data?: any) => void
+  data?: any
 }
 
-export default function MyAppointments({ onNavigate }: MyAppointmentsProps) {
+export default function MyAppointments({ onNavigate, data }: MyAppointmentsProps) {
   const [activeTab, setActiveTab] = useState("upcoming") // 'upcoming' or 'past'
+  const [highlightedAppointment, setHighlightedAppointment] = useState<number | null>(null)
+
+  // Handle data passed from notifications
+  useEffect(() => {
+    if (data?.appointmentId) {
+      setHighlightedAppointment(data.appointmentId)
+      // Auto-scroll to the specific appointment after a short delay
+      setTimeout(() => {
+        const element = document.getElementById(`appointment-${data.appointmentId}`)
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+      }, 500)
+    }
+  }, [data])
 
   const upcomingAppointments = [
     {
@@ -128,7 +144,15 @@ export default function MyAppointments({ onNavigate }: MyAppointmentsProps) {
             <div className="text-center text-gray-500 py-10">No upcoming appointments.</div>
           ) : (
             upcomingAppointments.map((appointment) => (
-              <Card key={appointment.id} className="border-l-4 border-l-blue-500">
+              <Card 
+                key={appointment.id} 
+                id={`appointment-${appointment.id}`}
+                className={`border-l-4 ${
+                  highlightedAppointment === appointment.id 
+                    ? 'border-l-green-500 bg-green-50 shadow-lg' 
+                    : 'border-l-blue-500'
+                } transition-all duration-300`}
+              >
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="font-semibold text-gray-900">{appointment.service}</h3>
@@ -167,7 +191,15 @@ export default function MyAppointments({ onNavigate }: MyAppointmentsProps) {
             <div className="text-center text-gray-500 py-10">No past appointments.</div>
           ) : (
             pastAppointments.map((appointment) => (
-              <Card key={appointment.id} className="border-l-4 border-l-gray-300">
+              <Card 
+                key={appointment.id} 
+                id={`appointment-${appointment.id}`}
+                className={`border-l-4 ${
+                  highlightedAppointment === appointment.id 
+                    ? 'border-l-green-500 bg-green-50 shadow-lg' 
+                    : 'border-l-gray-300'
+                } transition-all duration-300`}
+              >
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="font-semibold text-gray-900">{appointment.service}</h3>

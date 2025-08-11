@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { ArrowLeft, User, Mail, Phone, Stethoscope, Calendar } from "lucide-react"
 
 interface ProviderSignupStep1Props {
-  onNavigate: (screen: string) => void
+  onNavigate: (screen: string, data?: any) => void
 }
 
 export default function ProviderSignupStep1({ onNavigate }: ProviderSignupStep1Props) {

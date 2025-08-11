@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { ArrowLeft, Calendar, User, AlertTriangle, Home } from "lucide-react"
 
 interface NotificationsPageProps {
-  onNavigate: (screen: string) => void
+  onNavigate: (screen: string, data?: any) => void
 }
 
 export default function NotificationsPage({ onNavigate }: NotificationsPageProps) {
@@ -18,6 +18,8 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
       message: "Your appointment with Dr. Sarah Johnson is tomorrow at 10:00 AM.",
       time: "2 hours ago",
       color: "text-blue-600",
+      navigateTo: "my-appointments", // Navigate to appointments page
+      data: { appointmentId: 1, providerName: "Dr. Sarah Johnson" }
     },
     {
       id: 2,
@@ -27,6 +29,8 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
       message: "Nurse Maria Garcia has updated her availability for next week.",
       time: "Yesterday",
       color: "text-green-600",
+      navigateTo: "provider-profile", // Navigate to provider profile
+      data: { providerId: 2, providerName: "Nurse Maria Garcia" }
     },
     {
       id: 3,
@@ -36,6 +40,8 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
       message: "SOS activated from your account. Location shared with emergency contacts.",
       time: "3 days ago",
       color: "text-red-600",
+      navigateTo: "emergency-support", // Navigate to emergency support
+      data: { emergencyId: 3, type: "sos" }
     },
     {
       id: 4,
@@ -45,8 +51,17 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
       message: "New physical therapy services are now available in your area.",
       time: "1 week ago",
       color: "text-blue-600",
+      navigateTo: "provider-profile", // Navigate to booking page
+      data: { serviceType: "physical-therapy" }
     },
   ]
+
+  const handleNotificationClick = (notification: any) => {
+    // Navigate to the appropriate screen based on notification type
+    if (notification.navigateTo) {
+      onNavigate(notification.navigateTo, notification.data)
+    }
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
@@ -66,7 +81,11 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
           <div className="text-center text-gray-500 py-10">No new notifications.</div>
         ) : (
           notifications.map((notification) => (
-            <Card key={notification.id} className="border-l-4 border-l-blue-500">
+            <Card 
+              key={notification.id} 
+              className="border-l-4 border-l-blue-500 cursor-pointer hover:shadow-md transition-shadow active:scale-95"
+              onClick={() => handleNotificationClick(notification)}
+            >
               <CardContent className="p-4 flex items-start space-x-3">
                 <div
                   className={`p-2 rounded-full bg-blue-100 ${notification.color.replace("text-", "bg-").replace("-600", "-100")}`}
@@ -77,6 +96,10 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
                   <h3 className="font-semibold text-gray-900">{notification.title}</h3>
                   <p className="text-sm text-gray-700 mt-1">{notification.message}</p>
                   <p className="text-xs text-gray-500 mt-2">{notification.time}</p>
+                </div>
+                {/* Add a subtle arrow to indicate it's clickable */}
+                <div className="text-gray-400">
+                  <ArrowLeft className="h-4 w-4 transform rotate-180" />
                 </div>
               </CardContent>
             </Card>

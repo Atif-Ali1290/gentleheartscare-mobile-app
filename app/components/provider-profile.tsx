@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -18,11 +19,16 @@ import {
 } from "lucide-react"
 
 interface ProviderProfileProps {
-  onNavigate: (screen: string) => void
+  onNavigate: (screen: string, data?: any) => void
+  data?: any
 }
 
-export default function ProviderProfile({ onNavigate }: ProviderProfileProps) {
-  const provider = {
+export default function ProviderProfile({ onNavigate, data }: ProviderProfileProps) {
+  const [selectedProvider, setSelectedProvider] = useState<any>(null)
+
+  // Provider data based on different providers
+  const providers = {
+    "Dr. Sarah Johnson": {
     name: "Dr. Sarah Johnson",
     specialty: "Family Medicine",
     rating: 4.9,
@@ -50,7 +56,124 @@ export default function ProviderProfile({ onNavigate }: ProviderProfileProps) {
       { degree: "B.S. Biology", institution: "University of California, Berkeley", year: 2011 },
     ],
     awards: ["Patient's Choice Award 2022", "Top Doctor in Home Healthcare 2023"],
+    },
+    "Nurse Maria Garcia": {
+      name: "Nurse Maria Garcia",
+      specialty: "Home Care Nursing",
+      rating: 4.8,
+      reviews: 89,
+      distance: "1.8 km",
+      experience: "5 years",
+      languages: ["English", "Spanish", "Portuguese"],
+      price: "$45/hour",
+      availability: "Available next week",
+      verified: true,
+      bio: "Experienced registered nurse specializing in home healthcare and elderly care. Passionate about providing compassionate nursing care and helping patients maintain their independence at home.",
+      services: ["Nursing Care", "Wound Care", "Medication Management", "Elderly Care", "Post-Surgery Care"],
+      certifications: [
+        "RN - University of Miami",
+        "Certified Home Health Nurse (CHHN)",
+        "Basic Life Support (BLS)",
+      ],
+      social: {
+        facebook: "mariagarcia.rn",
+        instagram: "nurse_maria_garcia",
+        twitter: null,
+      },
+      education: [
+        { degree: "BSN", institution: "University of Miami", year: 2019 },
+        { degree: "Associate's in Nursing", institution: "Miami Dade College", year: 2017 },
+      ],
+      awards: ["Excellence in Patient Care 2023", "Nurse of the Year 2022"],
+    },
+    "Dr. Emily Chen": {
+      name: "Dr. Emily Chen",
+      specialty: "PhysioTherapy",
+      rating: 4.7,
+      reviews: 156,
+      distance: "3.1 km",
+      experience: "6 years",
+      languages: ["English", "Mandarin"],
+      price: "$65/session",
+      availability: "Available now",
+      verified: true,
+      bio: "Licensed physical therapist specializing in orthopedic rehabilitation, sports injuries, and post-surgical recovery. Committed to helping patients regain mobility and improve their quality of life through evidence-based therapeutic interventions.",
+      services: ["Physical Therapy", "Sports Rehabilitation", "Post-Surgery Recovery", "Pain Management", "Mobility Training"],
+      certifications: [
+        "DPT - University of Southern California",
+        "Licensed Physical Therapist (PT)",
+        "Orthopedic Clinical Specialist (OCS)",
+      ],
+      social: {
+        facebook: "emilychen.pt",
+        instagram: "dr_emily_pt",
+        twitter: "EmilyChenPT",
+      },
+      education: [
+        { degree: "DPT", institution: "University of Southern California", year: 2018 },
+        { degree: "B.S. Kinesiology", institution: "UCLA", year: 2015 },
+      ],
+      awards: ["Outstanding Physical Therapist 2023", "Patient Recovery Excellence Award 2022"],
+    },
+    "Dr. Michael Rodriguez": {
+      name: "Dr. Michael Rodriguez",
+      specialty: "Clinical Psychology",
+      rating: 4.9,
+      reviews: 203,
+      distance: "2.7 km",
+      experience: "12 years",
+      languages: ["English", "Spanish"],
+      price: "$100/session",
+      availability: "Available next week",
+      verified: true,
+      bio: "Licensed clinical psychologist with expertise in cognitive behavioral therapy, anxiety disorders, depression, and trauma therapy. Dedicated to providing compassionate mental health care in the comfort of your home.",
+      services: ["Individual Therapy", "Cognitive Behavioral Therapy", "Anxiety Treatment", "Depression Counseling", "Trauma Therapy"],
+      certifications: [
+        "Ph.D. Clinical Psychology - Stanford University",
+        "Licensed Clinical Psychologist (LCP)",
+        "Certified CBT Therapist",
+      ],
+      social: {
+        facebook: "michaelrodriguez.psych",
+        instagram: "dr_michael_psych",
+        twitter: "DrMikePsych",
+      },
+      education: [
+        { degree: "Ph.D. Clinical Psychology", institution: "Stanford University", year: 2012 },
+        { degree: "M.A. Psychology", institution: "Stanford University", year: 2009 },
+      ],
+      awards: ["Excellence in Mental Health Care 2023", "Outstanding Psychologist Award 2021"],
+    },
   }
+
+  // Handle data passed from notifications
+  useEffect(() => {
+    if (data?.providerName && providers[data.providerName as keyof typeof providers]) {
+      setSelectedProvider(providers[data.providerName as keyof typeof providers])
+    } else if (data?.serviceType) {
+      // Map service types to appropriate providers
+      const serviceProviderMap: { [key: string]: string } = {
+        "doctor": "Dr. Sarah Johnson",
+        "nurse": "Nurse Maria Garcia", 
+        "physiotherapy": "Dr. Emily Chen",
+        "psychologist": "Dr. Michael Rodriguez",
+        "occupational": "Dr. Emily Chen", // Using physio for occupational therapy
+        "speech": "Dr. Emily Chen", // Using physio for speech therapy
+      }
+      const providerName = serviceProviderMap[data.serviceType]
+      if (providerName && providers[providerName as keyof typeof providers]) {
+        setSelectedProvider(providers[providerName as keyof typeof providers])
+      } else {
+        // Default to Dr. Sarah Johnson for unknown service types
+        setSelectedProvider(providers["Dr. Sarah Johnson"])
+      }
+    } else {
+      // Default provider
+      setSelectedProvider(providers["Dr. Sarah Johnson"])
+    }
+  }, [data])
+
+  const provider = selectedProvider || providers["Dr. Sarah Johnson"]
 
   const reviews = [
     {
@@ -95,7 +218,9 @@ export default function ProviderProfile({ onNavigate }: ProviderProfileProps) {
         <div className="bg-white px-4 py-6">
           <div className="flex items-start space-x-4">
             <div className="bg-blue-100 rounded-full h-20 w-20 flex items-center justify-center flex-shrink-0">
-              <span className="text-2xl font-semibold text-blue-600">SJ</span>
+                              <span className="text-2xl font-semibold text-blue-600">
+                  {provider.name.split(' ').map((n: string) => n[0]).join('')}
+                </span>
             </div>
             <div className="flex-1">
               <div className="flex items-center space-x-2 mb-1">
@@ -181,7 +306,7 @@ export default function ProviderProfile({ onNavigate }: ProviderProfileProps) {
             <div className="mt-4">
               <h4 className="font-medium text-gray-900 mb-2">Languages</h4>
               <div className="flex flex-wrap gap-2">
-                {provider.languages.map((lang) => (
+                {provider.languages.map((lang: string) => (
                   <Badge key={lang} variant="secondary">
                     {lang}
                   </Badge>
@@ -198,7 +323,7 @@ export default function ProviderProfile({ onNavigate }: ProviderProfileProps) {
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              {provider.education.map((edu, index) => (
+              {provider.education.map((edu: any, index: number) => (
                 <div key={index} className="flex items-center space-x-2">
                   <Calendar className="h-4 w-4 text-gray-500" />
                   <span className="text-sm text-gray-700 font-medium">{edu.degree}</span>
@@ -218,7 +343,7 @@ export default function ProviderProfile({ onNavigate }: ProviderProfileProps) {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 gap-2">
-              {provider.services.map((service) => (
+              {provider.services.map((service: string) => (
                 <div key={service} className="flex items-center space-x-2">
                   <div className="h-2 w-2 bg-blue-600 rounded-full"></div>
                   <span className="text-sm text-gray-700">{service}</span>
@@ -238,7 +363,7 @@ export default function ProviderProfile({ onNavigate }: ProviderProfileProps) {
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              {provider.certifications.map((cert) => (
+              {provider.certifications.map((cert: string) => (
                 <div key={cert} className="flex items-center space-x-2">
                   <Shield className="h-4 w-4 text-green-500" />
                   <span className="text-sm text-gray-700">{cert}</span>
@@ -259,7 +384,7 @@ export default function ProviderProfile({ onNavigate }: ProviderProfileProps) {
             </CardHeader>
             <CardContent>
               <ul className="list-disc pl-5 space-y-1 text-sm text-gray-700">
-                {provider.awards.map((award, index) => (
+                {provider.awards.map((award: string, index: number) => (
                   <li key={index}>{award}</li>
                 ))}
               </ul>

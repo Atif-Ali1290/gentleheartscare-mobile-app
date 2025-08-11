@@ -1,13 +1,31 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, PhoneCall, Share2, Home } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { ArrowLeft, PhoneCall, Share2, Home, AlertTriangle, MapPin, Clock } from "lucide-react"
 
 interface EmergencySupportProps {
-  onNavigate: (screen: string) => void
+  onNavigate: (screen: string, data?: any) => void
+  data?: any
 }
 
-export default function EmergencySupport({ onNavigate }: EmergencySupportProps) {
+export default function EmergencySupport({ onNavigate, data }: EmergencySupportProps) {
+  const [emergencyInfo, setEmergencyInfo] = useState<any>(null)
+
+  // Handle data passed from notifications
+  useEffect(() => {
+    if (data?.emergencyId) {
+      setEmergencyInfo({
+        id: data.emergencyId,
+        type: data.type || "sos",
+        timestamp: new Date().toLocaleString(),
+        location: "Your current location",
+        status: "Active"
+      })
+    }
+  }, [data])
+
   const handleCallAmbulance = () => {
     alert("Calling Ambulance... (Simulated)")
     // In a real app, this would initiate a call or send an emergency signal
@@ -29,6 +47,34 @@ export default function EmergencySupport({ onNavigate }: EmergencySupportProps) 
           <h1 className="text-lg font-semibold text-gray-900">Emergency Help</h1>
         </div>
       </div>
+
+      {/* Emergency Info Card (if navigated from notification) */}
+      {emergencyInfo && (
+        <div className="px-4 py-4">
+          <Card className="border-l-4 border-l-red-500 bg-red-50">
+            <CardContent className="p-4">
+              <div className="flex items-center space-x-3 mb-3">
+                <AlertTriangle className="h-6 w-6 text-red-600" />
+                <h3 className="font-semibold text-red-800">Emergency Alert</h3>
+              </div>
+              <div className="space-y-2 text-sm">
+                <div className="flex items-center">
+                  <Clock className="h-4 w-4 mr-2 text-gray-500" />
+                  <span className="text-gray-700">Triggered: {emergencyInfo.timestamp}</span>
+                </div>
+                <div className="flex items-center">
+                  <MapPin className="h-4 w-4 mr-2 text-gray-500" />
+                  <span className="text-gray-700">Location: {emergencyInfo.location}</span>
+                </div>
+                <div className="flex items-center">
+                  <AlertTriangle className="h-4 w-4 mr-2 text-red-500" />
+                  <span className="text-red-700 font-medium">Status: {emergencyInfo.status}</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col items-center justify-center p-4 text-center">
